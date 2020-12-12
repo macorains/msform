@@ -5,13 +5,13 @@ import java.time.ZonedDateTime
 import scalikejdbc._
 
 case class FormTransferTaskMail(
-                               id: Int,
-                               form_transfer_task_id: Int,
-                               from_address_id: Int,
+                               id: BigInt,
+                               form_transfer_task_id: BigInt,
+                               from_address_id: BigInt,
                                to_address: String,
                                cc_address: String,
-                               bcc_address_id: Int,
-                               replyto_address_id: Int,
+                               bcc_address_id: BigInt,
+                               replyto_address_id: BigInt,
                                subject: String,
                                body: String,
                                user_group: String,
@@ -21,21 +21,21 @@ case class FormTransferTaskMail(
                                modified: ZonedDateTime
                                ){
   import FormTransferTaskMail._
-  def insert: Int = create(this)
-  def update: Int = save(this)
+  def insert: BigInt = create(this)
+  def update: BigInt = save(this)
 }
 
 object FormTransferTaskMail extends SQLSyntaxSupport[FormTransferTaskMail] {
   override val tableName = "D_FORM_TRANSFER_TASK_MAIL"
   def apply(rs:WrappedResultSet): FormTransferTaskMail = {
     FormTransferTaskMail(
-      rs.int("id"),
-      rs.int("form_transfer_task_id"),
-      rs.int("from_address_id"),
+      rs.bigInt("id"),
+      rs.bigInt("form_transfer_task_id"),
+      rs.bigInt("from_address_id"),
       rs.string("to_address"),
       rs.string("cc_address"),
-      rs.int("bcc_address_id"),
-      rs.int("replyto_address_id"),
+      rs.bigInt("bcc_address_id"),
+      rs.bigInt("replyto_address_id"),
       rs.string("subject"),
       rs.string("body"),
       rs.string("user_group"),
@@ -53,7 +53,7 @@ object FormTransferTaskMail extends SQLSyntaxSupport[FormTransferTaskMail] {
    * @param session DB Session
    * @return FormTransferTaskMail
    */
-  def get(userGroup: String, formTransferTaskId: Int)(implicit session: DBSession = autoSession): Option[FormTransferTaskMail] = {
+  def get(userGroup: String, formTransferTaskId: BigInt)(implicit session: DBSession = autoSession): Option[FormTransferTaskMail] = {
     val f = FormTransferTaskMail.syntax("f")
     withSQL(
     select(
@@ -86,7 +86,7 @@ object FormTransferTaskMail extends SQLSyntaxSupport[FormTransferTaskMail] {
    * @param session DB Session
    * @return 作成したレコードのID
    */
-  def create(formTransferTaskMail: FormTransferTaskMail)(implicit session: DBSession = autoSession): Int = {
+  def create(formTransferTaskMail: FormTransferTaskMail)(implicit session: DBSession = autoSession): BigInt = {
     withSQL{
       val c = FormTransferTaskMail.column
       insert.into(FormTransferTaskMail).namedValues(
@@ -113,7 +113,7 @@ object FormTransferTaskMail extends SQLSyntaxSupport[FormTransferTaskMail] {
    * @param session DB Session
    * @return result
    */
-  def save(formTransferTaskMail: FormTransferTaskMail)(implicit session: DBSession = autoSession): Int = {
+  def save(formTransferTaskMail: FormTransferTaskMail)(implicit session: DBSession = autoSession): BigInt = {
     withSQL{
       val c = FormTransferTaskMail.column
       update(FormTransferTaskMail).set(
@@ -141,7 +141,7 @@ object FormTransferTaskMail extends SQLSyntaxSupport[FormTransferTaskMail] {
    * @param session DB Session
    * @return Result
    */
-  def erase(userGroup: String, formTransferTaskMailId: Int)(implicit session: DBSession = autoSession): Int = {
+  def erase(userGroup: String, formTransferTaskMailId: BigInt)(implicit session: DBSession = autoSession): BigInt = {
     withSQL{
       val c = FormTransferTaskMail.column
       delete.from(FormTransferTaskMail).where.eq(c.id, formTransferTaskMailId).and.eq(c.user_group, userGroup)

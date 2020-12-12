@@ -5,8 +5,8 @@ import java.time.ZonedDateTime
 import scalikejdbc._
 
 case class TransferConfigMail(
-                             id: Int,
-                             transfer_config_id: Int,
+                             id: BigInt,
+                             transfer_config_id: BigInt,
                              use_cc: Boolean,
                              use_bcc: Boolean,
                              use_replyto: Boolean,
@@ -17,16 +17,16 @@ case class TransferConfigMail(
                              modified: ZonedDateTime
                              ){
   import TransferConfigMail._
-  def insert: Int = create(this)
-  def update: Int = save(this)
+  def insert: BigInt = create(this)
+  def update: BigInt = save(this)
 }
 
 object TransferConfigMail extends SQLSyntaxSupport[TransferConfigMail] {
   override val tableName = "D_TRANSFER_CONFIG_MAIL"
   def apply(rs:WrappedResultSet): TransferConfigMail = {
     TransferConfigMail(
-      rs.int("id"),
-      rs.int("transfer_config_id"),
+      rs.bigInt("id"),
+      rs.bigInt("transfer_config_id"),
       rs.boolean("use_cc"),
       rs.boolean("use_bcc"),
       rs.boolean("use_replyto"),
@@ -45,7 +45,7 @@ object TransferConfigMail extends SQLSyntaxSupport[TransferConfigMail] {
    * @param session DB Session
    * @return TransferConfigMail
    */
-  def get(userGroup: String, transferConfigId: Int)(implicit session: DBSession = autoSession): Option[TransferConfigMail] = {
+  def get(userGroup: String, transferConfigId: BigInt)(implicit session: DBSession = autoSession): Option[TransferConfigMail] = {
     val f = TransferConfigMail.syntax("f")
     withSQL(
       select(
@@ -74,7 +74,7 @@ object TransferConfigMail extends SQLSyntaxSupport[TransferConfigMail] {
    * @param session DB Session
    * @return 作成したレコードのID
    */
-  def create(transferConfigMail:TransferConfigMail)(implicit session: DBSession = autoSession): Int = {
+  def create(transferConfigMail:TransferConfigMail)(implicit session: DBSession = autoSession): BigInt = {
     withSQL {
       val c = TransferConfigMail.column
       insert.into(TransferConfigMail).namedValues(
@@ -97,7 +97,7 @@ object TransferConfigMail extends SQLSyntaxSupport[TransferConfigMail] {
    * @param session DB Session
    * @return Result
    */
-  def save(transferConfigMail:TransferConfigMail)(implicit session: DBSession = autoSession): Int = {
+  def save(transferConfigMail:TransferConfigMail)(implicit session: DBSession = autoSession): BigInt = {
     withSQL {
       val c = TransferConfigMail.column
       update(TransferConfigMail).set(

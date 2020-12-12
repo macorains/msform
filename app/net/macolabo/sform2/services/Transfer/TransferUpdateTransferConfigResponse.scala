@@ -3,7 +3,7 @@ package net.macolabo.sform2.services.Transfer
 import play.api.libs.json.{Json, Writes}
 
 case class TransferUpdateTransferConfigResponse(
-                                                 id: Int
+                                                 id: BigInt
                                                )
 
 trait TransferUpdateTransferConfigResponseJson {

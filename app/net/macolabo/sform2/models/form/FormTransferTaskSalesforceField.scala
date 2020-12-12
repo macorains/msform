@@ -5,8 +5,8 @@ import java.time.ZonedDateTime
 import scalikejdbc._
 
 case class FormTransferTaskSalesforceField(
-                                            id: Int,
-                                            form_transfer_task_salesforce_id: Int,
+                                            id: BigInt,
+                                            form_transfer_task_salesforce_id: BigInt,
                                             form_column_id: String,
                                             field_name: String,
                                             user_group: String,
@@ -16,16 +16,16 @@ case class FormTransferTaskSalesforceField(
                                             modified: ZonedDateTime
                                           ){
   import FormTransferTaskSalesforceField._
-  def insert: Int = create(this)
-  def update: Int = save(this)
+  def insert: BigInt = create(this)
+  def update: BigInt = save(this)
 }
 
 object FormTransferTaskSalesforceField extends SQLSyntaxSupport[FormTransferTaskSalesforceField] {
   override val tableName = "D_FORM_TRANSFER_TASK_SALESFORCE_FIELD"
   def apply(rs:WrappedResultSet): FormTransferTaskSalesforceField = {
     FormTransferTaskSalesforceField(
-      rs.int("id"),
-      rs.int("form_transfer_task_salesforce_id"),
+      rs.bigInt("id"),
+      rs.bigInt("form_transfer_task_salesforce_id"),
       rs.string("form_column_id"),
       rs.string("field_name"),
       rs.string("user_group"),
@@ -43,7 +43,7 @@ object FormTransferTaskSalesforceField extends SQLSyntaxSupport[FormTransferTask
    * @param session DB Session
    * @return FormTransferTaskSalesforceFieldのリスト
    */
-  def getList(userGroup: String, formTransferTaskSalesforceId: Int)(implicit session: DBSession = autoSession): List[FormTransferTaskSalesforceField] = {
+  def getList(userGroup: String, formTransferTaskSalesforceId: BigInt)(implicit session: DBSession = autoSession): List[FormTransferTaskSalesforceField] = {
     val f = FormTransferTaskSalesforceField.syntax("f")
     withSQL(
       select(
@@ -71,7 +71,7 @@ object FormTransferTaskSalesforceField extends SQLSyntaxSupport[FormTransferTask
    * @param session DB Session
    * @return 作成したレコードのID
    */
-  def create(formTransferTaskSalesforceField: FormTransferTaskSalesforceField)(implicit session: DBSession = autoSession): Int = {
+  def create(formTransferTaskSalesforceField: FormTransferTaskSalesforceField)(implicit session: DBSession = autoSession): BigInt = {
     withSQL {
       val c = FormTransferTaskSalesforceField.column
       insert.into(FormTransferTaskSalesforceField).namedValues(
@@ -93,7 +93,7 @@ object FormTransferTaskSalesforceField extends SQLSyntaxSupport[FormTransferTask
    * @param session DB Session
    * @return Result
    */
-  def save(formTransferTaskSalesforceField: FormTransferTaskSalesforceField)(implicit session: DBSession = autoSession): Int = {
+  def save(formTransferTaskSalesforceField: FormTransferTaskSalesforceField)(implicit session: DBSession = autoSession): BigInt = {
     withSQL {
       val c = FormTransferTaskSalesforceField.column
       update(FormTransferTaskSalesforceField).set(
@@ -114,7 +114,7 @@ object FormTransferTaskSalesforceField extends SQLSyntaxSupport[FormTransferTask
    * @param session DB Session
    * @return Result
    */
-  def erase(userGroup: String, formTransferTaskSalesforceFieldId: Int)(implicit session: DBSession = autoSession): Int = {
+  def erase(userGroup: String, formTransferTaskSalesforceFieldId: BigInt)(implicit session: DBSession = autoSession): BigInt = {
     withSQL{
       val c = FormTransferTaskSalesforceField.column
       delete.from(FormTransferTaskSalesforceField).where.eq(c.id, formTransferTaskSalesforceFieldId).and.eq(c.user_group, userGroup)

@@ -5,15 +5,15 @@ import play.api.libs.functional.syntax._
 
 
 case class TransferGetTransferResponseMailTransferConfigMailAddress(
-                                                                     id: Int,
-                                                                     transfer_config_mail_id: Int,
+                                                                     id: BigInt,
+                                                                     transfer_config_mail_id: BigInt,
                                                                      address_index: Int,
                                                                      name: String,
                                                                      address: String
                                                                    )
 case class TransferGetTransferResponseMailTransferConfig(
-                                                          id: Int,
-                                                          transfer_config_id: Int,
+                                                          id: BigInt,
+                                                          transfer_config_id: BigInt,
                                                           use_cc: Boolean,
                                                           use_bcc: Boolean,
                                                           use_replyto: Boolean,
@@ -21,8 +21,8 @@ case class TransferGetTransferResponseMailTransferConfig(
                                                        )
 
 case class TransferGetTransferResponseSalesforceTransferConfigObjectField(
-                                                                    id: Int,
-                                                                    transfer_config_salesforce_object_id: Int,
+                                                                    id: BigInt,
+                                                                    transfer_config_salesforce_object_id: BigInt,
                                                                     name: String,
                                                                     label: String,
                                                                     field_type: String,
@@ -30,8 +30,8 @@ case class TransferGetTransferResponseSalesforceTransferConfigObjectField(
                                                                     )
 
 case class TransferGetTransferResponseSalesforceTransferConfigObject(
-                                                                      id: Int,
-                                                                      transfer_config_salesforce_id: Int,
+                                                                      id: BigInt,
+                                                                      transfer_config_salesforce_id: BigInt,
                                                                       name: String,
                                                                       label: String,
                                                                       active: Boolean,
@@ -39,8 +39,8 @@ case class TransferGetTransferResponseSalesforceTransferConfigObject(
                                                                     )
 
 case class TransferGetTransferResponseSalesforceTransferConfig(
-                                                                id: Int,
-                                                                transfer_config_id: Int,
+                                                                id: BigInt,
+                                                                transfer_config_id: BigInt,
                                                                 sf_user_name: String,
                                                                 sf_password: String,
                                                                 sf_security_token: String,
@@ -53,7 +53,7 @@ case class TransferGetTransferResponseConfigDetail(
                                                   )
 
 case class TransferGetTransferConfigResponse(
-                                        id: Int,
+                                        id: BigInt,
                                         type_code: String,
                                         config_index: Int,
                                         name: String,
@@ -72,8 +72,8 @@ trait TransferGetTransferConfigResponseJson {
     )
 
   implicit val TransferGetTransferResponseMailTransferConfigMailAddressReads: Reads[TransferGetTransferResponseMailTransferConfigMailAddress] = (
-    (JsPath \ "id").read[Int] ~
-      (JsPath \ "transfer_config_mail_id").read[Int] ~
+    (JsPath \ "id").read[BigInt] ~
+      (JsPath \ "transfer_config_mail_id").read[BigInt] ~
       (JsPath \ "address_index").read[Int] ~
       (JsPath \ "name").read[String] ~
       (JsPath \ "address").read[String]
@@ -90,8 +90,8 @@ trait TransferGetTransferConfigResponseJson {
   )
 
   implicit val TransferGetTransferResponseMailTransferConfigReads: Reads[TransferGetTransferResponseMailTransferConfig] = (
-    (JsPath \ "id").read[Int] ~
-      (JsPath \ "transfer_config_id").read[Int] ~
+    (JsPath \ "id").read[BigInt] ~
+      (JsPath \ "transfer_config_id").read[BigInt] ~
       (JsPath \ "use_cc").read[Boolean] ~
       (JsPath \ "use_bcc").read[Boolean] ~
       (JsPath \ "use_replyto").read[Boolean] ~
@@ -109,8 +109,8 @@ trait TransferGetTransferConfigResponseJson {
     )
 
   implicit val TransferGetTransferResponseSalesforceTransferConfigObjectFieldReads: Reads[TransferGetTransferResponseSalesforceTransferConfigObjectField] = (
-    (JsPath \ "id").read[Int] ~
-      (JsPath \ "transfer_config_salesforce_object_id").read[Int] ~
+    (JsPath \ "id").read[BigInt] ~
+      (JsPath \ "transfer_config_salesforce_object_id").read[BigInt] ~
       (JsPath \ "name").read[String] ~
       (JsPath \ "label").read[String] ~
       (JsPath \ "field_type").read[String] ~
@@ -128,8 +128,8 @@ trait TransferGetTransferConfigResponseJson {
     )
 
   implicit val TransferGetTransferResponseSalesforceTransferConfigObjectReads: Reads[TransferGetTransferResponseSalesforceTransferConfigObject] = (
-    (JsPath \ "id").read[Int] ~
-      (JsPath \ "transfer_config_salesforce_id").read[Int] ~
+    (JsPath \ "id").read[BigInt] ~
+      (JsPath \ "transfer_config_salesforce_id").read[BigInt] ~
       (JsPath \ "name").read[String] ~
       (JsPath \ "label").read[String] ~
       (JsPath \ "active").read[Boolean] ~
@@ -147,8 +147,8 @@ trait TransferGetTransferConfigResponseJson {
   )
 
   implicit val TransferGetTransferResponseSalesforceTransferConfigReads: Reads[TransferGetTransferResponseSalesforceTransferConfig] = (
-    (JsPath \ "id").read[Int] ~
-      (JsPath \ "transfer_config_id").read[Int] ~
+    (JsPath \ "id").read[BigInt] ~
+      (JsPath \ "transfer_config_id").read[BigInt] ~
       (JsPath \ "sf_user_name").read[String] ~
       (JsPath \ "sf_password").read[String] ~
       (JsPath \ "sf_security_token").read[String] ~
@@ -175,7 +175,7 @@ trait TransferGetTransferConfigResponseJson {
   )
 
   implicit val TransferGetTransferResponseReads: Reads[TransferGetTransferConfigResponse] = (
-    (JsPath \ "id").read[Int] ~
+    (JsPath \ "id").read[BigInt] ~
       (JsPath \ "type_code").read[String] ~
       (JsPath \ "config_index").read[Int] ~
       (JsPath \ "name").read[String] ~

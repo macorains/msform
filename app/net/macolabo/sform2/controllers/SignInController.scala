@@ -16,7 +16,7 @@ import net.macolabo.sform2.forms.SignInForm
 import net.macolabo.sform2.models.user.{VerificationRequestEntry, VerificationRequestJson}
 import net.macolabo.sform2.services.User.UserService
 import org.webjars.play.{WebJarsUtil, routes}
-import play.api.Configuration
+import play.api.{Configuration, Logger}
 import play.api.i18n.{I18nSupport, Messages}
 import play.api.libs.json.{JsNull, JsObject, JsString, Json}
 import play.api.libs.mailer.{Email, MailerClient}
@@ -59,6 +59,8 @@ class SignInController @Inject() (
   val failureCheckPrefix = "FC_"
   val cacheExpireTime = 60
 
+  val logger: Logger = Logger(this.getClass())
+
   /**
    * Views the `Sign In` page.
    * @return The result to display.
@@ -80,7 +82,7 @@ class SignInController @Inject() (
           // val result = Redirect(routes.ApplicationController.index())
           userService.retrieve(loginInfo).flatMap {
             case Some(user) if !user.activated =>
-              Future.successful(BadRequest(Json.parse(s"""{"message":"${Messages("error.not.activated")}"}""")))
+              Future.successful(NotAcceptable(Json.parse(s"""{"message":"${Messages("error.not.activated")}"}""")))
             case Some(user) =>
               val c = configuration.underlying
               silhouette.env.authenticatorService.create(loginInfo).map {
@@ -111,7 +113,7 @@ class SignInController @Inject() (
           }
         }.recover {
           case e: ProviderException =>
-            BadRequest(Json.parse(s"""{"message":"${e.toString}"}"""))
+            InternalServerError(Json.parse(s"""{"message":"${e.toString}"}"""))
         }
       }
     )

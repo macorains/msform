@@ -5,13 +5,13 @@ import java.time.ZonedDateTime
 import scalikejdbc._
 
 case class FormColValidation(
-                              id: Int,
-                              form_col_id: Int,
-                              form_id: Int,
-                              max_value: Int,
-                              min_value: Int,
-                              max_length: Int,
-                              min_length: Int,
+                              id: BigInt,
+                              form_col_id: BigInt,
+                              form_id: BigInt,
+                              max_value: Option[Int],
+                              min_value: Option[Int],
+                              max_length: Option[Int],
+                              min_length: Option[Int],
                               input_type: Int,
                               required: Boolean,
                               user_group: String,
@@ -21,8 +21,8 @@ case class FormColValidation(
                               modified: ZonedDateTime
                             ){
   import FormColValidation._
-  def insert: Int = create(this)
-  def update: Int = save(this)
+  def insert: BigInt = create(this)
+  def update: BigInt = save(this)
 
 }
 
@@ -30,13 +30,13 @@ object FormColValidation extends SQLSyntaxSupport[FormColValidation] {
   override val tableName = "D_FORM_COL_VALIDATION"
   def apply(rs: WrappedResultSet): FormColValidation = {
     FormColValidation(
-      rs.int("id"),
-      rs.int("form_col_id"),
-      rs.int("form_id"),
-      rs.int("max_value"),
-      rs.int("min_value"),
-      rs.int("max_length"),
-      rs.int("min_length"),
+      rs.bigInt("id"),
+      rs.bigInt("form_col_id"),
+      rs.bigInt("form_id"),
+      rs.intOpt("max_value"),
+      rs.intOpt("min_value"),
+      rs.intOpt("max_length"),
+      rs.intOpt("min_length"),
       rs.int("input_type"),
       rs.boolean("required"),
       rs.string("user_group"),
@@ -55,7 +55,7 @@ object FormColValidation extends SQLSyntaxSupport[FormColValidation] {
    * @param session DB Session
    * @return フォーム項目バリデーションのリスト
    */
-  def get(userGroup: String, formId: Int, formColId: Int)(implicit session: DBSession = autoSession): Option[FormColValidation] = {
+  def get(userGroup: String, formId: BigInt, formColId: BigInt)(implicit session: DBSession = autoSession): Option[FormColValidation] = {
     val f = FormColValidation.syntax("f")
     withSQL (
       select(
@@ -90,7 +90,7 @@ object FormColValidation extends SQLSyntaxSupport[FormColValidation] {
    * @param session DB Session
    * @return
    */
-  def create(formColValidation: FormColValidation)(implicit session: DBSession = autoSession): Int = {
+  def create(formColValidation: FormColValidation)(implicit session: DBSession = autoSession): BigInt = {
     withSQL{
       val c = FormColValidation.column
       insert.into(FormColValidation).namedValues(
@@ -108,7 +108,7 @@ object FormColValidation extends SQLSyntaxSupport[FormColValidation] {
         c.created -> formColValidation.created,
         c.modified -> formColValidation.modified
       )
-    }.updateAndReturnGeneratedKey().apply().toInt
+    }.updateAndReturnGeneratedKey().apply()
   }
 
   /**
@@ -116,7 +116,7 @@ object FormColValidation extends SQLSyntaxSupport[FormColValidation] {
    * @param formColValidation フォーム項目バリデーション
    * @param session DB Session
    */
-  def save(formColValidation: FormColValidation)(implicit session: DBSession = autoSession): Int = {
+  def save(formColValidation: FormColValidation)(implicit session: DBSession = autoSession): BigInt = {
     withSQL{
       val c = FormColValidation.column
       update(FormColValidation).set(
@@ -141,7 +141,7 @@ object FormColValidation extends SQLSyntaxSupport[FormColValidation] {
    * @param session DB Session
    * @return
    */
-  def erase(userGroup: String, formColValidationId: Int)(implicit session: DBSession = autoSession): Int = {
+  def erase(userGroup: String, formColValidationId: BigInt)(implicit session: DBSession = autoSession): BigInt = {
     withSQL {
       delete.from(FormColValidation).where.eq(Form.column.id, formColValidationId).and.eq(Form.column.user_group, userGroup)
     }.update().apply()

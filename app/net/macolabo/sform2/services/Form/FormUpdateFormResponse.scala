@@ -3,7 +3,7 @@ package net.macolabo.sform2.services.Form
 import play.api.libs.json.{Json, Writes}
 
 case class FormUpdateFormResponse(
-                                 id: Int
+                                 id: BigInt
                                  )
 
 trait FormUpdateFormResponseJson {

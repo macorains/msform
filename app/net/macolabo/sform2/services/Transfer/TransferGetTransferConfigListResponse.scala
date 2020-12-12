@@ -4,7 +4,7 @@ import play.api.libs.json.{JsPath, Json, Reads, Writes}
 import play.api.libs.functional.syntax._
 
 case class TransferGetTransferConfigListResponse(
-                                          id: Int,
+                                          id: BigInt,
                                           type_code: String,
                                           config_index: Int,
                                           name: String,
@@ -20,7 +20,7 @@ trait TransferGetTransferConfigListJson {
     "status" -> transferGetTransferConfigList.status
   )
   implicit val transferGetTransferConfigListReads: Reads[TransferGetTransferConfigListResponse] = (
-    (JsPath \ "id").read[Int] ~
+    (JsPath \ "id").read[BigInt] ~
       (JsPath \ "type_code").read[String] ~
       (JsPath \ "config_index").read[Int] ~
       (JsPath \ "name").read[String] ~

@@ -2,6 +2,7 @@ package net.macolabo.sform2.services.Form
 import play.api.libs.json._
 import play.api.libs.json.Reads._
 import play.api.libs.functional.syntax._
+import net.macolabo.sform2.utils.StringUtils.StringImprovements
 
 /**
  * フォーム作成API・フォーム項目・バリデーション
@@ -13,10 +14,10 @@ import play.api.libs.functional.syntax._
  * @param required 必須項目
  */
 case class FormInsertFormRequestFormColValidation(
-                                                   max_value: Int,
-                                                   min_value: Int,
-                                                   max_length: Int,
-                                                   min_length: Int,
+                                                   max_value: Option[Int],
+                                                   min_value: Option[Int],
+                                                   max_length: Option[Int],
+                                                   min_length: Option[Int],
                                                    input_type: Int,
                                                    required: Boolean
                                                  )
@@ -56,7 +57,7 @@ case class FormInsertFormRequestFormCol(
                                          col_type: Int,
                                          default_value: String,
                                          select_list: List[FormInsertFormRequestFormColSelect],
-                                         validations: Option[FormInsertFormRequestFormColValidation]
+                                         validations: FormInsertFormRequestFormColValidation
                                        )
 
 /**
@@ -66,7 +67,7 @@ case class FormInsertFormRequestFormCol(
  * @param field_name Salesforceフィールド名
  */
 case class FormInsertFormRequestFormTransferTaskSalesforceField(
-                                                                 form_transfer_task_salesforce_id: Int,
+                                                                 form_transfer_task_salesforce_id: BigInt,
                                                                  form_column_id: String,
                                                                  field_name: String
                                                                )
@@ -80,9 +81,9 @@ case class FormInsertFormRequestFormTransferTaskSalesforceField(
  * @param cond_value 値　
  */
 case class FormInsertFormRequestFormTransferTaskCondition(
-                                                           form_transfer_task_id: Int,
-                                                           form_id: Int,
-                                                           form_col_id: Int,
+                                                           form_transfer_task_id: BigInt,
+                                                           form_id: BigInt,
+                                                           form_col_id: BigInt,
                                                            operator: String,
                                                            cond_value: String
                                                          )
@@ -99,12 +100,12 @@ case class FormInsertFormRequestFormTransferTaskCondition(
  * @param body 本文
  */
 case class FormInsertFormRequestFormTransferTaskMail(
-                                                      form_transfer_task_id: Int,
-                                                      from_address_id: Int,
+                                                      form_transfer_task_id: BigInt,
+                                                      from_address_id: BigInt,
                                                       to_address: String,
                                                       cc_address: String,
-                                                      bcc_address_id: Int,
-                                                      replyto_address_id: Int,
+                                                      bcc_address_id: BigInt,
+                                                      replyto_address_id: BigInt,
                                                       subject: String,
                                                       body: String
                                                     )
@@ -116,7 +117,7 @@ case class FormInsertFormRequestFormTransferTaskMail(
  * @param fields フィールド割り当て情報
  */
 case class FormInsertFormRequestFormTransferTaskSalesforce(
-                                                            form_transfer_task_id: Int,
+                                                            form_transfer_task_id: BigInt,
                                                             object_name: String,
                                                             fields: List[FormInsertFormRequestFormTransferTaskSalesforceField]
                                                           )
@@ -133,8 +134,8 @@ case class FormInsertFormRequestFormTransferTaskSalesforce(
  * @param salesforce SalesforceTransfer設定
  */
 case class FormInsertFormRequestFormTransferTask(
-                                                  transfer_config_id: Int,
-                                                  form_id: Int,
+                                                  transfer_config_id: BigInt,
+                                                  form_id: BigInt,
                                                   task_index: Int,
                                                   name: String,
                                                   form_transfer_task_conditions: List[FormInsertFormRequestFormTransferTaskCondition],
@@ -184,10 +185,10 @@ trait FormInsertFormRequestJson {
   )
 
   implicit val FormInsertFormRequestFormColValidationReads: Reads[FormInsertFormRequestFormColValidation] = (
-      (JsPath \ "max_value").read[Int] ~
-      (JsPath \ "min_value").read[Int] ~
-      (JsPath \ "max_length").read[Int] ~
-      (JsPath \ "min_length").read[Int] ~
+      (JsPath \ "max_value").readNullable[String].map[Option[Int]](os => os.flatMap(s => s.toIntOpt)) ~
+      (JsPath \ "min_value").readNullable[String].map[Option[Int]](os => os.flatMap(s => s.toIntOpt)) ~
+      (JsPath \ "max_length").readNullable[String].map[Option[Int]](os => os.flatMap(s => s.toIntOpt)) ~
+      (JsPath \ "min_length").readNullable[String].map[Option[Int]](os => os.flatMap(s => s.toIntOpt)) ~
       (JsPath \ "input_type").read[Int] ~
       (JsPath \ "required").read[Boolean]
     )(FormInsertFormRequestFormColValidation.apply _)
@@ -227,7 +228,7 @@ trait FormInsertFormRequestJson {
       (JsPath \ "col_type").read[Int] ~
       (JsPath \ "default_value").read[String] ~
       (JsPath \ "select_list").read[List[FormInsertFormRequestFormColSelect]] ~
-      (JsPath \ "validations").readNullable[FormInsertFormRequestFormColValidation]
+      (JsPath \ "validations").read[FormInsertFormRequestFormColValidation]
     )(FormInsertFormRequestFormCol.apply _)
 
   implicit val FormInsertFormRequestWrites: Writes[FormInsertFormRequest] = (formInsertFormRequest: FormInsertFormRequest) => Json.obj(

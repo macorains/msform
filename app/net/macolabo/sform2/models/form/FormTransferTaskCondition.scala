@@ -4,10 +4,10 @@ import java.time.ZonedDateTime
 
 import scalikejdbc._
 case class FormTransferTaskCondition(
-                                    id: Int,
-                                    form_transfer_task_id: Int,
-                                    form_id: Int,
-                                    form_col_id: Int,
+                                    id: BigInt,
+                                    form_transfer_task_id: BigInt,
+                                    form_id: BigInt,
+                                    form_col_id: BigInt,
                                     operator: String,
                                     cond_value: String,
                                     user_group: String,
@@ -17,18 +17,18 @@ case class FormTransferTaskCondition(
                                     modified: ZonedDateTime
                                     ){
   import FormTransferTaskCondition._
-  def insert: Int = create(this)
-  def update: Int = save(this)
+  def insert: BigInt = create(this)
+  def update: BigInt = save(this)
 }
 
 object FormTransferTaskCondition extends SQLSyntaxSupport[FormTransferTaskCondition] {
   override val tableName = "D_FORM_TRANSFER_TASK_CONDITION"
   def apply(rs: WrappedResultSet): FormTransferTaskCondition = {
     FormTransferTaskCondition(
-      rs.int("id"),
-      rs.int("form_transfer_task_id"),
-      rs.int("form_id"),
-      rs.int("form_col_id"),
+      rs.bigInt("id"),
+      rs.bigInt("form_transfer_task_id"),
+      rs.bigInt("form_id"),
+      rs.bigInt("form_col_id"),
       rs.string("operator"),
       rs.string("cond_value"),
       rs.string("user_group"),
@@ -45,7 +45,7 @@ object FormTransferTaskCondition extends SQLSyntaxSupport[FormTransferTaskCondit
    * @param session DB Session
    * @return FormTransferTaskCondition
    */
-  def get(formTransferTaskConditionId: Int)(implicit session: DBSession = autoSession): Option[FormTransferTaskCondition] = {
+  def get(formTransferTaskConditionId: BigInt)(implicit session: DBSession = autoSession): Option[FormTransferTaskCondition] = {
     val f = FormTransferTaskCondition.syntax("f")
     withSQL(
       select(
@@ -75,7 +75,7 @@ object FormTransferTaskCondition extends SQLSyntaxSupport[FormTransferTaskCondit
    * @param session DB Session
    * @return FormTransferTaskConditionのリスト
    */
-  def getList(userGroup: String, formId: Int, formTransferTaskId: Int)(implicit session: DBSession = autoSession): List[FormTransferTaskCondition] = {
+  def getList(userGroup: String, formId: BigInt, formTransferTaskId: BigInt)(implicit session: DBSession = autoSession): List[FormTransferTaskCondition] = {
     val f = FormTransferTaskCondition.syntax("f")
     withSQL(
       select(
@@ -107,7 +107,7 @@ object FormTransferTaskCondition extends SQLSyntaxSupport[FormTransferTaskCondit
    * @param session DB Session
    * @return
    */
-  def create(formTransferTaskCondition: FormTransferTaskCondition)(implicit session: DBSession = autoSession): Int = {
+  def create(formTransferTaskCondition: FormTransferTaskCondition)(implicit session: DBSession = autoSession): BigInt = {
     withSQL {
       val c = FormTransferTaskCondition.column
       insert
@@ -133,7 +133,7 @@ object FormTransferTaskCondition extends SQLSyntaxSupport[FormTransferTaskCondit
    * @param session DB Session
    * @return
    */
-  def save(formTransferTaskCondition: FormTransferTaskCondition)(implicit session: DBSession = autoSession): Int = {
+  def save(formTransferTaskCondition: FormTransferTaskCondition)(implicit session: DBSession = autoSession): BigInt = {
     withSQL {
       val c = FormTransferTaskCondition.column
       update(FormTransferTaskCondition)
@@ -159,7 +159,7 @@ object FormTransferTaskCondition extends SQLSyntaxSupport[FormTransferTaskCondit
    * @param session DB Session
    * @return Result
    */
-  def erase(userGroup: String, formTransferTaskConditionId: Int)(implicit session: DBSession = autoSession): Int = {
+  def erase(userGroup: String, formTransferTaskConditionId: BigInt)(implicit session: DBSession = autoSession): BigInt = {
     withSQL{
       val c = FormTransferTaskCondition.column
       delete.from(FormTransferTaskCondition).where.eq(c.id, formTransferTaskConditionId).and.eq(c.user_group, userGroup)

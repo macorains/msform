@@ -4,7 +4,7 @@ import play.api.libs.json.{JsPath, Json, Reads, Writes}
 import play.api.libs.functional.syntax._
 
 case class TransferGetTransferConfigSelectList(
-                                                id: Int,
+                                                id: BigInt,
                                                 name: String,
                                                 type_code: String
                                               )
@@ -16,7 +16,7 @@ trait TransferGetTransferConfigSelectListJson {
     "type_code" -> transferGetTransferConfigSelectList.type_code
   )
   implicit val TransferGetTransferConfigSelectListReads: Reads[TransferGetTransferConfigSelectList] = (
-    (JsPath \ "id").read[Int] ~
+    (JsPath \ "id").read[BigInt] ~
       (JsPath \ "name").read[String] ~
       (JsPath \ "type_Code").read[String]
   )(TransferGetTransferConfigSelectList.apply _)

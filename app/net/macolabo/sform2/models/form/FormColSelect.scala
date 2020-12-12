@@ -22,9 +22,9 @@ import scalikejdbc._
  * @param modified 更新日
  */
 case class FormColSelect(
-                          id: Int,
-                          form_col_id: Int,
-                          form_id: Int,
+                          id: BigInt,
+                          form_col_id: BigInt,
+                          form_id: BigInt,
                           select_index: Int,
                           select_name: String,
                           select_value: String,
@@ -38,8 +38,8 @@ case class FormColSelect(
                           modified: ZonedDateTime
                         ){
   import FormColSelect._
-  def insert: Int = create(this)
-  def update: Int = save(this)
+  def insert: BigInt = create(this)
+  def update: BigInt = save(this)
 
 }
 
@@ -47,9 +47,9 @@ object FormColSelect extends SQLSyntaxSupport[FormColSelect] {
   override val tableName = "D_FORM_COL_SELECT"
   def apply(rs: WrappedResultSet) :FormColSelect = {
     FormColSelect(
-      rs.int("id"),
-      rs.int("form_col_id"),
-      rs.int("form_id"),
+      rs.bigInt("id"),
+      rs.bigInt("form_col_id"),
+      rs.bigInt("form_id"),
       rs.int("select_index"),
       rs.string("select_name"),
       rs.string("select_value"),
@@ -72,7 +72,7 @@ object FormColSelect extends SQLSyntaxSupport[FormColSelect] {
    * @param session DB Session
    * @return フォーム項目選択項目のリスト
    */
-  def getList(userGroup: String, formId: Int, formColId: Int)(implicit session: DBSession = autoSession): List[FormColSelect] = {
+  def getList(userGroup: String, formId: BigInt, formColId: BigInt)(implicit session: DBSession = autoSession): List[FormColSelect] = {
     val f = FormColSelect.syntax("f")
     withSQL (
       select(
@@ -107,7 +107,7 @@ object FormColSelect extends SQLSyntaxSupport[FormColSelect] {
    * @param session DB Session
    * @return フォーム項目選択項目のID
    */
-  def create(formColSelect: FormColSelect)(implicit session: DBSession = autoSession): Int = {
+  def create(formColSelect: FormColSelect)(implicit session: DBSession = autoSession): BigInt = {
     withSQL {
       val c = FormColSelect.column
       insert.into(FormColSelect).namedValues(
@@ -134,7 +134,7 @@ object FormColSelect extends SQLSyntaxSupport[FormColSelect] {
    * @param session DB Session
    * @return
    */
-  def save(formColSelect: FormColSelect)(implicit session: DBSession = autoSession): Int = {
+  def save(formColSelect: FormColSelect)(implicit session: DBSession = autoSession): BigInt = {
     withSQL{
       val c = FormColSelect.column
       update(FormColSelect).set(
@@ -159,7 +159,7 @@ object FormColSelect extends SQLSyntaxSupport[FormColSelect] {
    * @param session DB Session
    * @return
    */
-  def erase(userGroup: String, formColSelectId: Int)(implicit session: DBSession = autoSession): Int = {
+  def erase(userGroup: String, formColSelectId: BigInt)(implicit session: DBSession = autoSession): BigInt = {
     withSQL {
       delete.from(FormColSelect).where.eq(Form.column.id, formColSelectId).and.eq(Form.column.user_group, userGroup)
     }.update().apply()

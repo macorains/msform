@@ -4,7 +4,7 @@ import play.api.libs.json.{JsPath, Json, Reads, Writes}
 import play.api.libs.functional.syntax._
 
 case class FormGetListForm(
-                            id: Int,
+                            id: BigInt,
                             name: String,
                             form_index: Int,
                             title: String,
@@ -26,7 +26,7 @@ trait FormGetListResponseJson {
     "hashed_id" -> formGetListForm.hashed_id
   )
   implicit val FormGetListFormReads: Reads[FormGetListForm] = (
-    (JsPath \ "id").read[Int] ~
+    (JsPath \ "id").read[BigInt] ~
       (JsPath \ "name").read[String] ~
       (JsPath \ "form_index").read[Int] ~
       (JsPath \ "title").read[String] ~

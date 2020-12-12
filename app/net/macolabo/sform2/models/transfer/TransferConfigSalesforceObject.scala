@@ -5,8 +5,8 @@ import java.time.ZonedDateTime
 import scalikejdbc._
 
 case class TransferConfigSalesforceObject(
-                                         id: Int,
-                                         transfer_config_salesforce_id: Int,
+                                         id: BigInt,
+                                         transfer_config_salesforce_id: BigInt,
                                          name: String,
                                          label: String,
                                          active: Boolean,
@@ -17,16 +17,16 @@ case class TransferConfigSalesforceObject(
                                          modified: ZonedDateTime
                                          ) {
   import TransferConfigSalesforceObject._
-  def insert: Int = create(this)
-  def update: Int = save(this)
+  def insert: BigInt = create(this)
+  def update: BigInt = save(this)
 }
 
 object TransferConfigSalesforceObject extends SQLSyntaxSupport[TransferConfigSalesforceObject] {
   override val tableName = "D_TRANSFER_CONFIG_SALESFORCE_OBJECT"
   def apply(rs:WrappedResultSet): TransferConfigSalesforceObject = {
     TransferConfigSalesforceObject(
-      rs.int("id"),
-      rs.int("transfer_config_salesforce_id"),
+      rs.bigInt("id"),
+      rs.bigInt("transfer_config_salesforce_id"),
       rs.string("name"),
       rs.string("label"),
       rs.boolean("active"),
@@ -45,7 +45,7 @@ object TransferConfigSalesforceObject extends SQLSyntaxSupport[TransferConfigSal
    * @param session DB Session
    * @return TransferConfigSalesforceObjectのリスト
    */
-  def getList(userGroup: String, transferConfigSalesforceId: Int)(implicit session: DBSession = autoSession): List[TransferConfigSalesforceObject] = {
+  def getList(userGroup: String, transferConfigSalesforceId: BigInt)(implicit session: DBSession = autoSession): List[TransferConfigSalesforceObject] = {
     val f = TransferConfigSalesforceObject.syntax("f")
     withSQL(
       select(
@@ -74,7 +74,7 @@ object TransferConfigSalesforceObject extends SQLSyntaxSupport[TransferConfigSal
    * @param session DB Session
    * @return 作成したレコードのID
    */
-  def create(transferConfigSalesforceObject: TransferConfigSalesforceObject)(implicit session: DBSession = autoSession): Int = {
+  def create(transferConfigSalesforceObject: TransferConfigSalesforceObject)(implicit session: DBSession = autoSession): BigInt = {
     withSQL {
       val c = TransferConfigSalesforceObject.column
       insert.into(TransferConfigSalesforceObject).namedValues(
@@ -97,7 +97,7 @@ object TransferConfigSalesforceObject extends SQLSyntaxSupport[TransferConfigSal
    * @param session DB Session
    * @return result
    */
-  def save(transferConfigSalesforceObject: TransferConfigSalesforceObject)(implicit session: DBSession = autoSession): Int = {
+  def save(transferConfigSalesforceObject: TransferConfigSalesforceObject)(implicit session: DBSession = autoSession): BigInt = {
     withSQL {
       val c = TransferConfigSalesforceObject.column
       update(TransferConfigSalesforceObject).set(
@@ -119,7 +119,7 @@ object TransferConfigSalesforceObject extends SQLSyntaxSupport[TransferConfigSal
    * @param session DB Session
    * @return Result
    */
-  def erase(userGroup: String, transferConfigSalesforceObjectId: Int)(implicit session: DBSession = autoSession): Int = {
+  def erase(userGroup: String, transferConfigSalesforceObjectId: BigInt)(implicit session: DBSession = autoSession): BigInt = {
     withSQL {
       val c = TransferConfigSalesforceObject.column
       delete.from(TransferConfigSalesforceObject).where.eq(c.id, transferConfigSalesforceObjectId).and.eq(c.user_group, userGroup)

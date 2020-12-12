@@ -91,7 +91,7 @@ class FormController @Inject() (
   def delete(hashed_form_id: String): Action[AnyContent] = silhouette.SecuredAction(WithProvider[DefaultEnv#A](CredentialsProvider.ID, List("admin", "operator"))).async { implicit request =>
     val res = formService.deleteForm(request.identity, hashed_form_id)
     res.id match {
-      case Some(s: Int) => Future.successful(Ok(toJson(res)))
+      case Some(s: BigInt) => Future.successful(Ok(toJson(res)))
       case None => Future.successful(BadRequest)
     }
   }

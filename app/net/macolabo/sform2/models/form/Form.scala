@@ -27,7 +27,7 @@ import scalikejdbc._
  * @param modified 更新日
  */
 case class Form(
-                 id: Int,
+                 id: BigInt,
                  hashed_id: String,
                  form_index: Int,
                  name: String,
@@ -47,15 +47,15 @@ case class Form(
                  modified: ZonedDateTime
                ){
   import Form._
-  def insert: Int = create(this)
-  def update: Int = save(this)
+  def insert: BigInt = create(this)
+  def update: BigInt = save(this)
 }
 
 object Form extends SQLSyntaxSupport[Form] {
   override val tableName = "D_FORM"
   def apply(rs: WrappedResultSet): Form = {
     Form(
-      rs.int("id"),
+      rs.bigInt("id"),
       rs.string("hashed_id"),
       rs.int("form_index"),
       rs.string("name"),
@@ -149,7 +149,7 @@ object Form extends SQLSyntaxSupport[Form] {
    * @param form フォームデータ
    * @return 作成したフォームのID
    */
-  def create(form: Form)(implicit session: DBSession = autoSession): Int = {
+  def create(form: Form)(implicit session: DBSession = autoSession): BigInt = {
       withSQL {
         val c = Form.column
         insert.into(Form).namedValues(
@@ -180,7 +180,7 @@ object Form extends SQLSyntaxSupport[Form] {
    * @param session DBセッション
    * @return
    */
-  def save(form: Form)(implicit session: DBSession = autoSession): Int = {
+  def save(form: Form)(implicit session: DBSession = autoSession): BigInt = {
       withSQL{
         val c = Form.column
         update(Form).set(
@@ -208,7 +208,7 @@ object Form extends SQLSyntaxSupport[Form] {
    * @param session DB Session
    * @return
    */
-  def erase(userGroup:String, formId: Int)(implicit session: DBSession = autoSession): Int = {
+  def erase(userGroup:String, formId: BigInt)(implicit session: DBSession = autoSession): BigInt = {
     withSQL {
       delete.from(Form).where.eq(Form.column.id, formId).and.eq(Form.column.user_group, userGroup)
     }.update().apply()

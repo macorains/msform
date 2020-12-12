@@ -39,7 +39,7 @@ libraryDependencies ++= Seq(
 
   "org.apache.commons" % "commons-lang3" % "3.10",
   "commons-io" % "commons-io" % "2.7" ,
-  specs2 % Test,
+  "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test,
   ehcache,
   guice,
   filters

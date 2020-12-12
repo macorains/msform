@@ -5,7 +5,7 @@ import play.api.libs.json.Reads._
 import play.api.libs.functional.syntax._
 
 case class FormDeleteFormResponse(
-                                 id: Option[Int]
+                                 id: Option[BigInt]
                                  )
 
 trait FormDeleteFormResponseJson {

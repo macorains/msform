@@ -18,13 +18,13 @@ import play.api.libs.functional.syntax._
   * @param required 入力必須
   */
 case class FormGetFormResponseFormColValidation(
-                                               id: Int,
-                                               form_col_id: Int,
-                                               form_id: Int,
-                                               max_value: Int,
-                                               min_value: Int,
-                                               max_length: Int,
-                                               min_length: Int,
+                                               id: BigInt,
+                                               form_col_id: BigInt,
+                                               form_id: BigInt,
+                                               max_value: Option[Int],
+                                               min_value: Option[Int],
+                                               max_length: Option[Int],
+                                               min_length: Option[Int],
                                                input_type: Int,
                                                required: Boolean
                                                )
@@ -42,9 +42,9 @@ case class FormGetFormResponseFormColValidation(
   * @param view_style 参照時CSSスタイル
   */
 case class FormGetFormResponseFormColSelect(
-                                               id: Int,
-                                               form_col_id: Int,
-                                               form_id: Int,
+                                               id: BigInt,
+                                               form_col_id: BigInt,
+                                               form_id: BigInt,
                                                select_index: Int,
                                                select_name: String,
                                                select_value: String,
@@ -62,9 +62,9 @@ case class FormGetFormResponseFormColSelect(
  * @param form_transfer_task_conditions FormTransferTaskConditionのリスト
  */
 case class FormGetFormResponseFormTransferTask(
-                                            id: Int,
-                                            transfer_config_id: Int,
-                                            form_id: Int,
+                                            id: BigInt,
+                                            transfer_config_id: BigInt,
+                                            form_id: BigInt,
                                             task_index: Int,
                                             name: String,
                                             form_transfer_task_conditions: List[FormGetFormResponseFormTransferTaskCondition],
@@ -82,10 +82,10 @@ case class FormGetFormResponseFormTransferTask(
  * @param cond_value 値　
  */
 case class FormGetFormResponseFormTransferTaskCondition(
-                                                         id: Int,
-                                                         form_transfer_task_id: Int,
-                                                         form_id: Int,
-                                                         form_col_id: Int,
+                                                         id: BigInt,
+                                                         form_transfer_task_id: BigInt,
+                                                         form_id: BigInt,
+                                                         form_col_id: BigInt,
                                                          operator: String,
                                                          cond_value: String
                                                        )
@@ -103,13 +103,13 @@ case class FormGetFormResponseFormTransferTaskCondition(
  * @param body 本文
  */
 case class FormGetFormResponseFormTransferTaskMail(
-                                                    id: Int,
-                                                    form_transfer_task_id: Int,
-                                                    from_address_id: Int,
+                                                    id: BigInt,
+                                                    form_transfer_task_id: BigInt,
+                                                    from_address_id: BigInt,
                                                     to_address: String,
                                                     cc_address: String,
-                                                    bcc_address_id: Int,
-                                                    replyto_address_id: Int,
+                                                    bcc_address_id: BigInt,
+                                                    replyto_address_id: BigInt,
                                                     subject: String,
                                                     body: String
                                                   )
@@ -122,8 +122,8 @@ case class FormGetFormResponseFormTransferTaskMail(
  * @param fields フィールド割り当てリスト
  */
 case class FormGetFormResponseFormTransferTaskSalesforce(
-                                                          id: Int,
-                                                          form_transfer_task_id: Int,
+                                                          id: BigInt,
+                                                          form_transfer_task_id: BigInt,
                                                           object_name: String,
                                                           fields: List[FormGetFormResponseFormTransferTaskSalesforceField]
                                                         )
@@ -136,8 +136,8 @@ case class FormGetFormResponseFormTransferTaskSalesforce(
  * @param field_name Salesforceフィールド名
  */
 case class FormGetFormResponseFormTransferTaskSalesforceField(
-                                                               id: Int,
-                                                               form_transfer_task_salesforce_id: Int,
+                                                               id: BigInt,
+                                                               form_transfer_task_salesforce_id: BigInt,
                                                                form_column_id: String,
                                                                field_name: String
                                                              )
@@ -155,8 +155,8 @@ case class FormGetFormResponseFormTransferTaskSalesforceField(
   * @param validations バリデーション
   */
 case class FormGetFormResponseFormCol(
-                                     id: Int,
-                                     form_id: Int,
+                                     id: BigInt,
+                                     form_id: BigInt,
                                      name: String,
                                      col_id: String,
                                      col_index: Int,
@@ -183,7 +183,7 @@ case class FormGetFormResponseFormCol(
   * @param form_cols フォーム項目
   */
 case class FormGetFormResponse(
-                              id: Int,
+                              id: BigInt,
                               name: String,
                               form_index: Int,
                               title: String,
@@ -206,22 +206,22 @@ trait FormGetFormResponseJson {
     "id" -> formGetFormResponseFormColValidation.id,
     "form_col_id" -> formGetFormResponseFormColValidation.form_col_id,
     "form_id" -> formGetFormResponseFormColValidation.form_id,
-    "max_value" -> formGetFormResponseFormColValidation.max_value,
-    "min_value" -> formGetFormResponseFormColValidation.min_value,
-    "max_length" -> formGetFormResponseFormColValidation.max_length,
-    "min_length" -> formGetFormResponseFormColValidation.min_length,
+    "max_value" -> JsString(formGetFormResponseFormColValidation.max_value.map(v=>v.toString).getOrElse("")),
+    "min_value" -> JsString(formGetFormResponseFormColValidation.min_value.map(v=>v.toString).getOrElse("")),
+    "max_length" -> JsString(formGetFormResponseFormColValidation.max_length.map(v=>v.toString).getOrElse("")),
+    "min_length" -> JsString(formGetFormResponseFormColValidation.min_length.map(v=>v.toString).getOrElse("")),
     "input_type" -> formGetFormResponseFormColValidation.input_type,
     "required" -> formGetFormResponseFormColValidation.required
   )
 
   implicit val FormGetFormResponseFormColValidationReads: Reads[FormGetFormResponseFormColValidation] = (
-    (JsPath \ "id").read[Int] ~
-      (JsPath \ "form_col_id").read[Int] ~
-      (JsPath \ "form_id").read[Int] ~
-      (JsPath \ "max_value").read[Int] ~
-      (JsPath \ "min_value").read[Int] ~
-      (JsPath \ "max_length").read[Int] ~
-      (JsPath \ "min_length").read[Int] ~
+    (JsPath \ "id").read[BigInt] ~
+      (JsPath \ "form_col_id").read[BigInt] ~
+      (JsPath \ "form_id").read[BigInt] ~
+      (JsPath \ "max_value").readNullable[Int] ~
+      (JsPath \ "min_value").readNullable[Int] ~
+      (JsPath \ "max_length").readNullable[Int] ~
+      (JsPath \ "min_length").readNullable[Int] ~
       (JsPath \ "input_type").read[Int] ~
       (JsPath \ "required").read[Boolean]
     )(FormGetFormResponseFormColValidation.apply _)
@@ -239,9 +239,9 @@ trait FormGetFormResponseJson {
   )
 
   implicit val FormGetFormResponseFormColSelectListReads: Reads[FormGetFormResponseFormColSelect] = (
-    (JsPath \ "id").read[Int] ~
-      (JsPath \ "form_col_id").read[Int] ~
-      (JsPath \ "form_id").read[Int] ~
+    (JsPath \ "id").read[BigInt] ~
+      (JsPath \ "form_col_id").read[BigInt] ~
+      (JsPath \ "form_id").read[BigInt] ~
       (JsPath \ "select_index").read[Int] ~
       (JsPath \ "select_name").read[String] ~
       (JsPath \ "select_value").read[String] ~
@@ -262,9 +262,9 @@ trait FormGetFormResponseJson {
   )
 
   implicit val formGetFormResponseFormTransferTaskReads: Reads[FormGetFormResponseFormTransferTask] = (
-    (JsPath \ "id").read[Int] ~
-      (JsPath \ "transfer_config_id").read[Int] ~
-      (JsPath \ "form_id").read[Int] ~
+    (JsPath \ "id").read[BigInt] ~
+      (JsPath \ "transfer_config_id").read[BigInt] ~
+      (JsPath \ "form_id").read[BigInt] ~
       (JsPath \ "task_index").read[Int] ~
       (JsPath \ "name").read[String] ~
       (JsPath \ "form_transfer_task_condition").read[List[FormGetFormResponseFormTransferTaskCondition]] ~
@@ -282,10 +282,10 @@ trait FormGetFormResponseJson {
   )
 
   implicit val formGetFormResponseFormTransferTaskConditionReads: Reads[FormGetFormResponseFormTransferTaskCondition] = (
-    (JsPath \ "id").read[Int] ~
-      (JsPath \ "form_transfer_task_id").read[Int] ~
-      (JsPath \ "form_id").read[Int] ~
-      (JsPath \ "form_col_id").read[Int] ~
+    (JsPath \ "id").read[BigInt] ~
+      (JsPath \ "form_transfer_task_id").read[BigInt] ~
+      (JsPath \ "form_id").read[BigInt] ~
+      (JsPath \ "form_col_id").read[BigInt] ~
       (JsPath \ "operator").read[String] ~
       (JsPath \ "cond_value").read[String]
   )(FormGetFormResponseFormTransferTaskCondition.apply _)
@@ -303,13 +303,13 @@ trait FormGetFormResponseJson {
   )
 
   implicit val FormGetFormResponseFormTransferTaskMailReads: Reads[FormGetFormResponseFormTransferTaskMail] = (
-    (JsPath \ "id").read[Int] ~
-      (JsPath \ "form_transfer_task_id").read[Int] ~
-      (JsPath \ "from_address_id").read[Int] ~
+    (JsPath \ "id").read[BigInt] ~
+      (JsPath \ "form_transfer_task_id").read[BigInt] ~
+      (JsPath \ "from_address_id").read[BigInt] ~
       (JsPath \ "to_address").read[String] ~
       (JsPath \ "cc_address").read[String] ~
-      (JsPath \ "bcc_address_id").read[Int] ~
-      (JsPath \ "replyto_address_id").read[Int] ~
+      (JsPath \ "bcc_address_id").read[BigInt] ~
+      (JsPath \ "replyto_address_id").read[BigInt] ~
       (JsPath \ "subject").read[String] ~
       (JsPath \ "body").read[String]
   )(FormGetFormResponseFormTransferTaskMail.apply _)
@@ -323,8 +323,8 @@ trait FormGetFormResponseJson {
   )
 
   implicit val FormGetFormResponseFormTransferTaskSalesforceFieldReads: Reads[FormGetFormResponseFormTransferTaskSalesforceField] = (
-    (JsPath \ "id").read[Int] ~
-      (JsPath \ "transfer_task_salesforce_id").read[Int] ~
+    (JsPath \ "id").read[BigInt] ~
+      (JsPath \ "transfer_task_salesforce_id").read[BigInt] ~
       (JsPath \ "form_column_id").read[String] ~
       (JsPath \ "field_name").read[String]
   )(FormGetFormResponseFormTransferTaskSalesforceField.apply _)
@@ -337,8 +337,8 @@ trait FormGetFormResponseJson {
   )
 
   implicit val FormGetFormResponseFormTransferTaskSalesforceReads: Reads[FormGetFormResponseFormTransferTaskSalesforce] = (
-    (JsPath \ "id").read[Int] ~
-      (JsPath \ "form_transfer_task_id").read[Int] ~
+    (JsPath \ "id").read[BigInt] ~
+      (JsPath \ "form_transfer_task_id").read[BigInt] ~
       (JsPath \ "object_name").read[String] ~
       (JsPath \ "fields").read[List[FormGetFormResponseFormTransferTaskSalesforceField]]
   )(FormGetFormResponseFormTransferTaskSalesforce.apply _)
@@ -356,8 +356,8 @@ trait FormGetFormResponseJson {
   )
 
   implicit val FormGetFormResponseFormColReads: Reads[FormGetFormResponseFormCol] = (
-    (JsPath \ "id").read[Int] ~
-      (JsPath \ "form_id").read[Int] ~
+    (JsPath \ "id").read[BigInt] ~
+      (JsPath \ "form_id").read[BigInt] ~
       (JsPath \ "name").read[String] ~
       (JsPath \ "col_id").read[String] ~
       (JsPath \ "col_index").read[Int] ~
@@ -385,7 +385,7 @@ trait FormGetFormResponseJson {
   )
 
   implicit val FormGetFormResponseReads: Reads[FormGetFormResponse] = (
-    (JsPath \ "id").read[Int] ~
+    (JsPath \ "id").read[BigInt] ~
       (JsPath \ "name").read[String] ~
       (JsPath \ "form_index").read[Int] ~
       (JsPath \ "title").read[String] ~
