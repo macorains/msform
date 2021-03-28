@@ -29,6 +29,7 @@ trait UserService extends IdentityService[User] {
    */
   def save(user: User): Future[User]
 
+  def save(userSaveRequest: UserSaveRequest, userGroup: String): Future[User]
   /**
    * Saves the social profile for a user.
    *
@@ -38,6 +39,8 @@ trait UserService extends IdentityService[User] {
    * @return The user for whom the profile was saved.
    */
   def save(profile: CommonSocialProfile): Future[User]
+
+  def delete(userId: String, group: String): Unit
 
   /**
    * Adminグループのユーザー存在チェック

@@ -29,7 +29,7 @@ GET         /account/activate/:token         net.macolabo.sform2.controllers.Act
 GET         /assets/*file                    controllers.Assets.at(path="/public", file)
 ->          /webjars                         webjars.Routes
 
-# GET /formpost/:hashed_form_id net.macolabo.sform2.controllers.FormPostDataController.getPostData(hashed_form_id: String)
+GET /formpost/:hashed_form_id net.macolabo.sform2.controllers.FormPostDataController.getPostData(hashed_form_id: String)
 
 # form
 GET /form/list net.macolabo.sform2.controllers.FormController.getList()
@@ -40,7 +40,7 @@ DELETE /form/:hashed_form_id net.macolabo.sform2.controllers.FormController.dele
 
 # transfer
 GET /transfer/config/list net.macolabo.sform2.controllers.TransferController.getTransferConfigList()
-GET /transfer/config/selectlist net.macolabo.sform2.controllers.TransferController.getSelectList()
+GET /transfer/selectlist net.macolabo.sform2.controllers.TransferController.getSelectList()
 GET /transfer/config/:transfer_config_id net.macolabo.sform2.controllers.TransferController.getTransferConfig(transfer_config_id: Int)
 POST /transfer/config net.macolabo.sform2.controllers.TransferController.saveTransferConfig()
 POST /transfer/salesforce/check net.macolabo.sform2.controllers.TransferController.checkTransferSalesforce()
@@ -49,7 +49,10 @@ GET /transfer/salesforce/field/:transfer_config_id/:object_name net.macolabo.sfo
 
 # user
 GET /user net.macolabo.sform2.controllers.UserController.getList()
+POST /user net.macolabo.sform2.controllers.UserController.save()
+DELETE /user/:user_id net.macolabo.sform2.controllers.UserController.delete(user_id: String)
 GET /user/isadmin net.macolabo.sform2.controllers.UserController.isAdmin()
+
 
 # transferTask
 # GET /transfertask/list/:form_id net.macolabo.sform2.controllers.TransferTaskController.getTransferTaskListByFormId(form_id: String)

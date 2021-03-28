@@ -113,7 +113,8 @@ class SignInController @Inject() (
           }
         }.recover {
           case e: ProviderException =>
-            InternalServerError(Json.parse(s"""{"message":"${e.toString}"}"""))
+            logger.error(e.toString)
+            NotFound(Json.parse(s"""{"message":"${e.toString}"}"""))
         }
       }
     )

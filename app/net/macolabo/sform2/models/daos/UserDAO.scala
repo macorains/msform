@@ -37,6 +37,12 @@ trait UserDAO {
    */
   def save(user: User): Future[User]
 
+  /**
+   * Delete a user.
+   * @param userID The ID of the user to delete.
+   */
+  def delete(userID: String, group: String): Unit
+
   def getList(identity: User): JsValue
   def countAdminUsers() :Int
 }

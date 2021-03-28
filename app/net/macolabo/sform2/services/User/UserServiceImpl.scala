@@ -43,6 +43,22 @@ class UserServiceImpl @Inject() (userDAO: UserDAO)(implicit ex: ExecutionContext
    */
   def save(user: User): Future[User] = userDAO.save(user)
 
+  def save(userSaveRequest: UserSaveRequest, userGroup: String): Future[User] = {
+    val userId = userSaveRequest.userId.map(UUID.fromString).getOrElse(UUID.randomUUID())
+    save(models.User(
+      userID = userId,
+      loginInfo = LoginInfo(userId.toString, s"""${userSaveRequest.email}:${userSaveRequest.userGroup}"""),
+      group = Option(userGroup),
+      role = Option("operator"),
+      firstName = Option(userSaveRequest.firstName),
+      lastName = Option(userSaveRequest.lastName),
+      fullName = Option(userSaveRequest.fullName),
+      email = Option(userSaveRequest.email),
+      avatarURL = userSaveRequest.avatarUrl,
+      activated = userSaveRequest.userId.isDefined,
+      deletable = true
+    ))
+  }
   /**
    * Saves the social profile for a user.
    *
@@ -76,6 +92,10 @@ class UserServiceImpl @Inject() (userDAO: UserDAO)(implicit ex: ExecutionContext
           deletable = true
         ))
     }
+  }
+
+  def delete(userId: String, group: String): Unit = {
+    userDAO.delete(userId, group)
   }
 
   /**

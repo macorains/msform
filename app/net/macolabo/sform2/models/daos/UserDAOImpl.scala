@@ -12,8 +12,18 @@ import scala.collection.mutable
 import scala.concurrent.{Future, _}
 import scala.concurrent.duration.Duration
 
-case class UserJson(userId: String, userGroup: String, role: String, firstName: String, lastName: String, fullName: String,
-  email: String, avatarUrl: String, activated: Boolean, deletable: Boolean)
+case class UserJson(
+                     user_id: String,
+                     user_group: String,
+                     role: String,
+                     first_name: String,
+                     last_name: String,
+                     full_name: String,
+                     email: String,
+                     avatar_url: String,
+                     activated: Boolean,
+                     deletable: Boolean
+                   )
 object UserJson {
   implicit def jsonUserWrites: Writes[UserJson] = Json.writes[UserJson]
   implicit def jsonUserReads: Reads[UserJson] = Json.reads[UserJson]
@@ -95,7 +105,17 @@ class UserDAOImpl extends UserDAO with SFDBConf {
     }
   }
 
-  def update(user: User): Future[User] = {
+  /**
+   * Delete a user.
+   * @param userID The ID of the user to delete.
+   */
+  def delete(userID: String, group: String): Unit = {
+    DB localTx { implicit l =>
+      sql"DELETE FROM M_USERINFO WHERE USER_ID=$userID AND USER_GROUP=$group".update().apply()
+    }
+  }
+
+  private def update(user: User): Future[User] = {
     DB localTx { implicit l =>
       sql"UPDATE M_USERINFO SET FIRST_NAME=${user.firstName}, LAST_NAME=${user.lastName} ,EMAIL=${user.email}, AVATAR_URL=${user.avatarURL}, ACTIVATED=${user.activated}, DELETABLE=${user.deletable} WHERE USER_ID=${user.userID.toString}"
         .update().apply()
@@ -103,7 +123,7 @@ class UserDAOImpl extends UserDAO with SFDBConf {
     }
   }
 
-  def add(user: User): Future[User] = {
+  private def add(user: User): Future[User] = {
     DB localTx { implicit l =>
       sql"INSERT INTO M_USERINFO(USER_ID,PROVIDER_ID,PROVIDER_KEY,USER_GROUP,ROLE,FIRST_NAME,LAST_NAME,EMAIL,AVATAR_URL,ACTIVATED,DELETABLE) VALUES(${user.userID.toString},${user.loginInfo.providerID},${user.loginInfo.providerKey},${user.group},${user.role},${user.firstName},${user.lastName},${user.email},'',0,1)"
         .update().apply()
@@ -111,10 +131,11 @@ class UserDAOImpl extends UserDAO with SFDBConf {
     }
   }
 
+
   def getList(identity: User): JsValue = {
     val userGroup = identity.group.getOrElse("")
     DB localTx { implicit l =>
-      val userList = sql"SELECT USER_ID,PROVIDER_ID,PROVIDER_KEY,USER_GROUP,ROLE,FIRST_NAME,LAST_NAME,FULL_NAME,EMAIL,AVATAR_URL,ACTIVATED,DELETABLE FROM M_USERINFO WHERE USER_GROUP=${userGroup}"
+      val userList = sql"SELECT USER_ID,PROVIDER_ID,PROVIDER_KEY,USER_GROUP,ROLE,FIRST_NAME,LAST_NAME,FULL_NAME,EMAIL,AVATAR_URL,ACTIVATED,DELETABLE FROM M_USERINFO WHERE USER_GROUP=$userGroup"
         .map(rs =>
           models.User(
             UUID.fromString(rs.string("USER_ID")),
